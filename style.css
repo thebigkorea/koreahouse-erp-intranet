@@ -321,3 +321,35 @@
       .quick-grid{grid-template-columns:repeat(2,1fr)}
       .task-grid{grid-template-columns:1fr}
     }
+
+
+/* ===== 좌측 메뉴형 ERP 화면 전환 ===== */
+[hidden]{display:none !important}
+.side-home.active,
+.side-link.active{
+  background:#ffffff;
+  color:#1f2937;
+  box-shadow:inset 0 0 0 2px #172033;
+}
+.side-link.active .side-ico{filter:none}
+.work-view{margin-top:0}
+.work-view > .section-head{margin-bottom:14px}
+.work-view .module-grid{display:block}
+.work-view .module{
+  width:100%;
+  min-height:430px;
+  border-radius:18px;
+}
+.work-view .module-head{
+  min-height:88px;
+  padding:20px 24px;
+}
+.work-view .module-icon{width:48px;height:48px;font-size:22px}
+.work-view .module-head h4{font-size:20px}
+.work-view .module-head p{font-size:11px;margin-top:6px}
+.work-view .module-body{padding:24px}
+.work-view .task-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.work-view .task{min-height:70px;padding:16px;font-size:13px;background:#fff;border-color:#e2e6eb}
+.work-view .task.primary{background:#192233}
+@media(max-width:1100px){.work-view .task-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.work-view .task-grid{grid-template-columns:1fr}.work-view .module{min-height:0}}

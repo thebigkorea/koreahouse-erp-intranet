@@ -1,5 +1,6 @@
-document.getElementById('today').textContent=new Intl.DateTimeFormat('ko-KR',{dateStyle:'full'}).format(new Date());
-    const PASSWORD='1234';
+const todayEl=document.getElementById('today');
+if(todayEl) todayEl.textContent=new Intl.DateTimeFormat('ko-KR',{dateStyle:'full'}).format(new Date());
+const PASSWORD='1234';
     function secureOpen(message,url){const pw=prompt(message);if(pw===null)return;if(pw!==PASSWORD){alert('비밀번호가 올바르지 않습니다.');return}window.open(url,'_blank')}
     function openContractLedger(){secureOpen('근로계약서 원장조회 비밀번호를 입력하세요.','https://docs.google.com/spreadsheets/d/1sSKno2C3Gnvx-FwfEru_rsP0QWzliWcVEQIKe9vXFqc/edit?gid=1591232369#gid=1591232369')}
     function openOvertimePage(url){secureOpen('초과근무 관리 비밀번호를 입력하세요.',url)}
@@ -121,3 +122,66 @@ const now=new Date();
       }
     }
   }
+
+
+/* ===== ERP 좌측 메뉴 화면 전환 ===== */
+const ERP_PAGES = {
+  home: { title:'ERP 홈', desc:'한국의집 매장 운영현황과 주요 업무를 한눈에 확인합니다.' },
+  store: { title:'매장관리', desc:'한국의집 매장 운영 입력과 주요 관리 원장을 확인합니다.' },
+  reservation: { title:'예약 · 고객', desc:'예약, 고객 CRM 및 문자 업무를 관리합니다.' },
+  schedule: { title:'근무스케줄', desc:'주간·월간 근무표와 스케줄 원장을 관리합니다.' },
+  order: { title:'발주관리', desc:'식자재와 비품 발주 업무를 관리합니다.' },
+  performance: { title:'매출 · 실적', desc:'일일 영업실적 입력과 경영 대시보드를 확인합니다.' },
+  hr: { title:'통합인사', desc:'직원정보, 인사대장 및 보건증을 관리합니다.' },
+  attendance: { title:'근태 · 휴가', desc:'출퇴근, 초과근무 및 연월차 업무를 관리합니다.' },
+  contract: { title:'전자계약', desc:'근로계약서와 재직·경력 증명 업무를 관리합니다.' },
+  payroll: { title:'급여관리', desc:'한국의집 직원 급여를 조회·계산·확정합니다.' },
+  daily: { title:'일용직 · 알바', desc:'일용직 및 아르바이트 근로내역과 지급을 관리합니다.' },
+  recruit: { title:'채용 · 퇴직', desc:'지원자, 면접, 외국인 비자 및 퇴직 업무를 관리합니다.' },
+  ledger: { title:'원장 · 자료', desc:'인사·지원자·계약·퇴직 관련 원장과 관리자 자료를 조회합니다.' }
+};
+
+function showErpPage(pageId, updateHash=true){
+  const page = ERP_PAGES[pageId] ? pageId : 'home';
+  const isHome = page === 'home';
+  const homeViews = document.querySelectorAll('.home-view');
+  const workArea = document.getElementById('workArea');
+  const modules = document.querySelectorAll('#workArea .module');
+
+  homeViews.forEach(el => { el.hidden = !isHome; });
+  if(workArea) workArea.hidden = isHome;
+  modules.forEach(el => { el.hidden = isHome || el.id !== page; });
+
+  const meta = ERP_PAGES[page];
+  const title = document.getElementById('pageTitle');
+  const desc = document.getElementById('pageDesc');
+  if(title) title.textContent = meta.title;
+  if(desc) desc.textContent = meta.desc;
+
+  document.querySelectorAll('.side-home,.side-link').forEach(link => {
+    const target=(link.getAttribute('href')||'').replace('#','');
+    link.classList.toggle('active', target === page);
+  });
+
+  document.body.classList.remove('menu-open');
+  window.scrollTo({top:0,behavior:'auto'});
+  if(updateHash && location.hash !== '#'+page){
+    history.replaceState(null,'','#'+page);
+  }
+}
+
+document.querySelectorAll('.side-home,.side-link').forEach(link => {
+  link.addEventListener('click', function(e){
+    const page=(this.getAttribute('href')||'').replace('#','');
+    if(ERP_PAGES[page]){
+      e.preventDefault();
+      showErpPage(page);
+    }
+  });
+});
+
+window.addEventListener('hashchange', function(){
+  showErpPage((location.hash||'#home').slice(1), false);
+});
+
+showErpPage((location.hash||'#home').slice(1), false);

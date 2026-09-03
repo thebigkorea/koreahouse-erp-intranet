@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111827">
   <title>한국의집 통합 ERP</title>
-  <link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <div class="app">
@@ -19,7 +19,7 @@
       <a class="side-home" href="#home"><span class="side-ico">⌂</span>ERP 홈</a>
 
       <div class="side-section-title">매장 · 운영</div>
-      <a class="side-link" href="#sales"><span class="side-ico">🏠</span>매장관리</a>
+      <a class="side-link" href="#store"><span class="side-ico">🏠</span>매장관리</a>
       <a class="side-link" href="#reservation"><span class="side-ico">📅</span>예약 · 고객</a>
       <a class="side-link" href="#schedule"><span class="side-ico">🗓️</span>근무스케줄</a>
       <a class="side-link" href="#order"><span class="side-ico">📦</span>발주관리</a>
@@ -47,8 +47,8 @@
     <header class="topbar">
       <button class="mobile-toggle" onclick="document.body.classList.toggle('menu-open')">☰</button>
       <div class="top-title">
-        <h1>ERP 홈</h1>
-        <p>한국의집 매장 운영현황과 주요 업무를 한눈에 확인합니다.</p>
+        <h1 id="pageTitle">ERP 홈</h1>
+        <p id="pageDesc">한국의집 매장 운영현황과 주요 업무를 한눈에 확인합니다.</p>
       </div>
 
       <div class="top-actions">
@@ -65,7 +65,7 @@
     </header>
 
     <main class="page" id="home">
-      <section class="hero">
+      <section class="hero home-view">
         <div>
           <div class="eyebrow">KOREA HOUSE MANAGEMENT HUB</div>
           <h2>예약부터 근태, 스케줄, 급여와 매출까지<br>하나의 ERP에서 연결합니다.</h2>
@@ -77,7 +77,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section home-view">
         <div class="section-head">
           <div><h3>오늘의 통합 현황</h3><p>현재 연결 가능한 한국의집 업무 현황입니다.</p></div>
           <span class="version">V1 DESIGN</span>
@@ -176,9 +176,20 @@
         </div>
       </section>
 
-      <section class="section" id="sales">
+      <section class="section work-view" id="workArea">
         <div class="section-head"><div><h3>전체 업무</h3><p>업무 성격별 세부 시스템입니다.</p></div></div>
         <div class="module-grid">
+
+          <article class="module" id="store">
+            <div class="module-head"><span class="module-icon">🏠</span><div><h4>매장관리</h4><p>한국의집 운영 입력 및 매장 원장</p></div></div>
+            <div class="module-body">
+              <div class="task-grid">
+                <a class="task primary" target="_blank" href="store-manager.html">매장 운영 입력</a>
+                <a class="task" target="_blank" href="https://docs.google.com/spreadsheets/d/1msk6vf_5zPXcUH9iimGW82BQzeiKXpDyxm2itsq7o1Q/edit?gid=370891861#gid=370891861">매장 원장 조회</a>
+                <a class="task" target="_blank" href="https://drive.worksmobile.com/drive/web/my?resourceKey=MTAwMDAxNTA0NzA1MTQyfDM0NzI2MDA4NDIzMTAyMjcyMDl8RHww&resourceLocation=24101">영업 관련 파일</a>
+              </div>
+            </div>
+          </article>
 
           <article class="module" id="reservation">
             <div class="module-head"><span class="module-icon">📅</span><div><h4>예약 · 고객관리</h4><p>예약, 고객 CRM, 문자 발송</p></div></div>
@@ -192,13 +203,11 @@
           </article>
 
           <article class="module" id="order">
-            <div class="module-head"><span class="module-icon">📦</span><div><h4>발주 · 매장운영</h4><p>식자재, 비품 및 운영자료</p></div></div>
+            <div class="module-head"><span class="module-icon">📦</span><div><h4>발주관리</h4><p>식자재 · 비품 발주 및 관련 자료</p></div></div>
             <div class="module-body">
               <div class="task-grid">
                 <a class="task primary" target="_blank" href="https://thebigkorea.github.io/koreahouse-intranet/koreahouse-order.html">통합 발주</a>
-                <a class="task" target="_blank" href="store-manager.html">매장 운영 입력</a>
-                <a class="task" target="_blank" href="https://docs.google.com/spreadsheets/d/1msk6vf_5zPXcUH9iimGW82BQzeiKXpDyxm2itsq7o1Q/edit?gid=370891861#gid=370891861">매장 원장 조회</a>
-                <a class="task" target="_blank" href="https://drive.worksmobile.com/drive/web/my?resourceKey=MTAwMDAxNTA0NzA1MTQyfDM0NzI2MDA4NDIzMTAyMjcyMDl8RHww&resourceLocation=24101">영업 관련 파일</a>
+                <a class="task" target="_blank" href="https://drive.worksmobile.com/drive/web/my?resourceKey=MTAwMDAxNTA0NzA1MTQyfDM0NzI2MDA4NDIzMTAyMjcyMDl8RHww&resourceLocation=24101">발주 · 영업 관련 파일</a>
               </div>
             </div>
           </article>
@@ -319,6 +328,6 @@
   </div>
 </div>
 
-  <script src="script.js?v=1"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
