@@ -109,10 +109,14 @@
             <div class="status-value" id="statusContract">-</div>
             <div class="status-desc">30일 이내 계약</div>
           </div>
-          <div class="status-card emphasis">
-            <div class="status-label">최근 영업실적</div>
-            <div class="status-value" id="statusPerformance">-</div>
-            <div class="status-desc" id="statusPerformanceDate">최근 입력일 기준</div>
+          <div class="status-card emphasis" role="button" tabindex="0"
+               onclick="openAttendanceManage()"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAttendanceManage()}"
+               title="오늘 출퇴근 상세내역 보기"
+               style="cursor:pointer">
+            <div class="status-label">오늘 출근 현황</div>
+            <div class="status-value">상세보기</div>
+            <div class="status-desc">출근 · 퇴근 상세내역</div>
           </div>
         </div>
 
