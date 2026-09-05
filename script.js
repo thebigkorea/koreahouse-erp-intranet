@@ -75,6 +75,9 @@ function openStaffList() {
 const RESERVATION_API_URL =
   'https://script.google.com/macros/s/AKfycbztW1jBJBIF9QxsXhJMmXfb24w1bPZCQbIormWPiEyiRIx2stbS3YmUABpbc4PtWnZ8/exec';
 
+const MANAGEMENT_DASHBOARD_API_URL =
+  'https://script.google.com/macros/s/AKfycbzX4BEypYJv6h-5FZBTCFx1iJfHk-3DPBIHO9yRJfUmdXyy6xATo7vGnjG_T1swabh7XQ/exec';
+
 const KOREA_DAILY_WORKER_API_URL =
   'https://script.google.com/macros/s/AKfycbz_NFlMRhx_mP_0maccpd62iWNHGMVo-pAZCHg7s8-tM26QvKlIVrPL6TmElRgM6XIS/exec';
 
@@ -129,6 +132,56 @@ async function loadTodayReservationCount() {
   } catch (error) {
     if (statusEl) statusEl.textContent = '-';
     console.log('오늘 예약 건수 조회 실패', error);
+  }
+}
+
+function formatWon(value) {
+  return new Intl.NumberFormat('ko-KR', {
+    style: 'currency',
+    currency: 'KRW',
+    maximumFractionDigits: 0
+  }).format(Number(value || 0));
+}
+
+async function loadLatestPerformance() {
+  const valueEl = document.getElementById('statusPerformance');
+  const dateEl = document.getElementById('statusPerformanceDate');
+
+  try {
+    const response = await fetch(
+      MANAGEMENT_DASHBOARD_API_URL +
+        '?action=koreanHouseLatestSales&t=' +
+        Date.now(),
+      { cache: 'no-store' }
+    );
+
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.message || '영업실적 조회 실패');
+
+    if (!data.dateKey) {
+      if (valueEl) valueEl.textContent = '-';
+      if (dateEl) dateEl.textContent = '입력된 영업실적 없음';
+      return;
+    }
+
+    if (valueEl) valueEl.textContent = formatWon(data.sales);
+
+    if (dateEl) {
+      let description = data.dateLabel + ' 영업실적';
+
+      if (data.changeRate !== null && data.changeRate !== undefined) {
+        const sign = Number(data.changeRate) > 0 ? '+' : '';
+        description += ' · 전주 동일요일 대비 ' + sign + data.changeRate + '%';
+      }
+
+      dateEl.textContent = description;
+    }
+  } catch (error) {
+    if (valueEl) valueEl.textContent = '-';
+    if (dateEl) dateEl.textContent = '영업실적 연결 확인 필요';
+    console.log('최근 영업실적 조회 실패', error);
   }
 }
 
@@ -364,6 +417,7 @@ window.addEventListener('hashchange', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
   loadTodayReservationCount();
+  loadLatestPerformance();
   loadDailyUnpaidBadges();
   loadTodayInterviewBadge();
   loadContractExpireBadge();
