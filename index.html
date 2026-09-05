@@ -84,27 +84,42 @@
         </div>
 
         <div class="status-grid">
-          <div class="status-card">
+          <div class="status-card" role="button" tabindex="0"
+               onclick="openStatusDetail('https://script.google.com/macros/s/AKfycbztW1jBJBIF9QxsXhJMmXfb24w1bPZCQbIormWPiEyiRIx2stbS3YmUABpbc4PtWnZ8/exec')"
+               onkeydown="openStatusDetailByKey(event,'https://script.google.com/macros/s/AKfycbztW1jBJBIF9QxsXhJMmXfb24w1bPZCQbIormWPiEyiRIx2stbS3YmUABpbc4PtWnZ8/exec')"
+               title="오늘 예약 상세내역 보기" style="cursor:pointer">
             <div class="status-label">오늘 예약</div>
             <div class="status-value" id="statusReservation">-</div>
             <div class="status-desc">오늘 취소 · 노쇼 제외 예약</div>
           </div>
-          <div class="status-card">
+          <div class="status-card" role="button" tabindex="0"
+               onclick="openStatusDetail('applicant-admin.html')"
+               onkeydown="openStatusDetailByKey(event,'applicant-admin.html')"
+               title="오늘 면접 상세내역 보기" style="cursor:pointer">
             <div class="status-label">오늘 면접</div>
             <div class="status-value" id="statusInterview">-</div>
             <div class="status-desc">지원자 · 면접 일정</div>
           </div>
-          <div class="status-card">
+          <div class="status-card" role="button" tabindex="0"
+               onclick="openStatusDetail('health-cert.html')"
+               onkeydown="openStatusDetailByKey(event,'health-cert.html')"
+               title="보건증 상세내역 보기" style="cursor:pointer">
             <div class="status-label">보건증 확인</div>
             <div class="status-value" id="statusHealth">-</div>
             <div class="status-desc">만료 · 임박 대상</div>
           </div>
-          <div class="status-card emphasis">
+          <div class="status-card emphasis" role="button" tabindex="0"
+               onclick="openStatusDetail('https://thebigkorea.github.io/thebigkorea-hq/daily-worker.html')"
+               onkeydown="openStatusDetailByKey(event,'https://thebigkorea.github.io/thebigkorea-hq/daily-worker.html')"
+               title="일용직 미처리 상세내역 보기" style="cursor:pointer">
             <div class="status-label">일용직 미처리</div>
             <div class="status-value" id="statusDaily">-</div>
             <div class="status-desc">미지급 · 미완료 대상</div>
           </div>
-          <div class="status-card">
+          <div class="status-card" role="button" tabindex="0"
+               onclick="openStatusDetail('https://thebigkorea.github.io/thebigkorea-hq/contract-admin.html')"
+               onkeydown="openStatusDetailByKey(event,'https://thebigkorea.github.io/thebigkorea-hq/contract-admin.html')"
+               title="계약 만료예정 상세내역 보기" style="cursor:pointer">
             <div class="status-label">계약 만료예정</div>
             <div class="status-value" id="statusContract">-</div>
             <div class="status-desc">30일 이내 계약</div>
@@ -332,6 +347,17 @@
 </div>
 
   <script>
+    function openStatusDetail(url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function openStatusDetailByKey(event, url) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openStatusDetail(url);
+      }
+    }
+
     // 왼쪽 메뉴와 동일한 순서로 전체 업무 카드를 배치합니다.
     const moduleOrder = [
       'reservation',
