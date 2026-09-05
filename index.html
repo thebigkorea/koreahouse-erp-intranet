@@ -18,22 +18,22 @@
     <div class="side-scroll">
       <a class="side-home" href="#home"><span class="side-ico">⌂</span>ERP 홈</a>
 
-      <div class="side-section-title">매장 · 운영</div>
-      <a class="side-link" href="#store"><span class="side-ico">🏠</span>매장관리</a>
+      <div class="side-section-title">고객 · 근무</div>
       <a class="side-link" href="#reservation"><span class="side-ico">📅</span>예약 · 고객</a>
+      <a class="side-link" href="#daily"><span class="side-ico">👷</span>일용직 · 알바 등록</a>
       <a class="side-link" href="#schedule"><span class="side-ico">🗓️</span>근무스케줄</a>
-      <a class="side-link" href="#order"><span class="side-ico">📦</span>발주관리</a>
-      <a class="side-link" href="#performance"><span class="side-ico">📈</span>매출 · 실적</a>
-
-      <div class="side-section-title">인사 · 급여</div>
-      <a class="side-link" href="#hr"><span class="side-ico">👥</span>통합인사</a>
       <a class="side-link" href="#attendance"><span class="side-ico">🕘</span>근태 · 휴가</a>
-      <a class="side-link" href="#contract"><span class="side-ico">📝</span>전자계약</a>
-      <a class="side-link" href="#payroll"><span class="side-ico">💳</span>급여관리</a>
-      <a class="side-link" href="#daily"><span class="side-ico">👷</span>일용직 · 알바</a>
 
-      <div class="side-section-title">채용 · 관리</div>
+      <div class="side-section-title">매장 · 인사</div>
+      <a class="side-link" href="#store"><span class="side-ico">🏠</span>매장관리</a>
       <a class="side-link" href="#recruit"><span class="side-ico">🧑‍💼</span>채용 · 퇴직</a>
+      <a class="side-link" href="#contract"><span class="side-ico">📝</span>전자계약</a>
+      <a class="side-link" href="#hr"><span class="side-ico">👥</span>통합인사</a>
+
+      <div class="side-section-title">경영 · 자료</div>
+      <a class="side-link" href="#order"><span class="side-ico">📦</span>발주관리</a>
+      <a class="side-link" href="#performance"><span class="side-ico">📈</span>매출실적</a>
+      <a class="side-link" href="#payroll"><span class="side-ico">💳</span>급여관리</a>
       <a class="side-link" href="#ledger"><span class="side-ico">📚</span>원장 · 자료</a>
     </div>
 
@@ -282,7 +282,7 @@
           </article>
 
           <article class="module" id="daily">
-            <div class="module-head"><span class="module-icon">👷</span><div><h4>일용직 · 아르바이트</h4><p>근로내역 및 지급 관리</p></div></div>
+            <div class="module-head"><span class="module-icon">👷</span><div><h4>일용직 · 알바 등록</h4><p>근로내역 및 지급 관리</p></div></div>
             <div class="module-body">
               <div class="task-grid">
                 <a class="task primary" target="_blank" href="https://thebigkorea.github.io/thebigkorea-hq/daily-worker.html">일용직 통합관리<span id="koreaDailyUnpaidBadge" class="badge">0</span></a>
@@ -328,6 +328,29 @@
   </div>
 </div>
 
+  <script>
+    // 왼쪽 메뉴와 동일한 순서로 전체 업무 카드를 배치합니다.
+    const moduleOrder = [
+      'reservation',
+      'daily',
+      'schedule',
+      'attendance',
+      'store',
+      'recruit',
+      'contract',
+      'hr',
+      'order',
+      'performance',
+      'payroll',
+      'ledger'
+    ];
+
+    const moduleGrid = document.querySelector('.module-grid');
+    moduleOrder.forEach((id) => {
+      const module = document.getElementById(id);
+      if (moduleGrid && module) moduleGrid.appendChild(module);
+    });
+  </script>
   <script src="script.js?v=2"></script>
 </body>
 </html>
