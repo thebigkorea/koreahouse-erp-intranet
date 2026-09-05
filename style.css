@@ -213,7 +213,7 @@
     .panel-head a{font-size:12px;color:#5368d7;font-weight:800;padding:3px 0}
 
     .quick-grid{
-      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+      display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;
     }
     .quick{
       min-height:138px;
