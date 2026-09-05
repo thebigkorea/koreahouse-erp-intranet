@@ -130,8 +130,8 @@
                title="오늘 출퇴근 상세내역 보기"
                style="cursor:pointer">
             <div class="status-label">오늘 출근 현황</div>
-            <div class="status-value">상세보기</div>
-            <div class="status-desc">출근 · 퇴근 상세내역</div>
+            <div class="status-value" id="statusAttendance">-</div>
+            <div class="status-desc" id="statusAttendanceDesc">출근 현황 불러오는 중</div>
           </div>
         </div>
 
@@ -380,6 +380,6 @@
       if (moduleGrid && module) moduleGrid.appendChild(module);
     });
   </script>
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>

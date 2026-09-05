@@ -90,6 +90,9 @@ const CONTRACT_API_URL =
 const HEALTH_CERT_API_URL =
   'https://script.google.com/macros/s/AKfycby-FdNL_GsXFB4klTrk8fM6YB7Fgkoh0-we-D48z9o34d0OUy09PtHuAaCIAfngIqs7/exec';
 
+const ATTENDANCE_API_URL =
+  'https://script.google.com/macros/s/AKfycbz6rYVTUixqPOhHhethQcRI4ziwNukl8EcZx9nVvFLw0rV5o4kLD_BExlONS7WPGE54sQ/exec';
+
 function setStatusValue(id, count) {
   const el = document.getElementById(id);
   if (el) el.textContent = Number(count || 0) + '건';
@@ -293,6 +296,39 @@ async function loadHealthCertBadge() {
   }
 }
 
+async function loadTodayAttendanceSummary() {
+  const valueEl = document.getElementById('statusAttendance');
+  const descEl = document.getElementById('statusAttendanceDesc');
+
+  try {
+    const response = await fetch(
+      ATTENDANCE_API_URL +
+        '?action=getTodayAttendanceSummary&t=' +
+        Date.now(),
+      { cache: 'no-store' }
+    );
+
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const data = await response.json();
+    if (!data.success) throw new Error(data.message || '출근 현황 조회 실패');
+
+    const checkInCount = Number(data.checkInCount || 0);
+    const workingCount = Number(data.workingCount || 0);
+    const completedCount = Number(data.completedCount || 0);
+
+    if (valueEl) valueEl.textContent = checkInCount + '명';
+    if (descEl) {
+      descEl.textContent =
+        '근무 중 ' + workingCount + '명 · 퇴근 완료 ' + completedCount + '명';
+    }
+  } catch (error) {
+    if (valueEl) valueEl.textContent = '-';
+    if (descEl) descEl.textContent = '출퇴근 시스템 연결 확인 필요';
+    console.log('오늘 출근 현황 조회 실패', error);
+  }
+}
+
 const now = new Date();
 const month = String(now.getMonth() + 1).padStart(2, '0');
 const monthInput = document.getElementById('baseMonth');
@@ -417,7 +453,7 @@ window.addEventListener('hashchange', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
   loadTodayReservationCount();
-  loadLatestPerformance();
+  loadTodayAttendanceSummary();
   loadDailyUnpaidBadges();
   loadTodayInterviewBadge();
   loadContractExpireBadge();
