@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111827">
   <title>한국의집 통합 ERP</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <div class="app">
@@ -173,6 +173,16 @@
               <a class="quick" target="_blank" href="https://thebigkorea.github.io/koreahouse-intranet/koreahouse-order.html">
                 <span class="quick-ico">📦</span><span><strong>통합 발주</strong><small>식자재 · 비품 주문</small></span>
               </a>
+            </div>
+          </div>
+
+          <div class="panel attendance-roster-panel">
+            <div class="panel-head">
+              <div><h3>오늘 출근 직원</h3><p>오늘 출근한 직원과 현재 상태입니다.</p></div>
+              <strong class="attendance-roster-count" id="attendanceRosterCount">-</strong>
+            </div>
+            <div class="attendance-name-list" id="attendanceNameList">
+              <div class="attendance-empty">출근 직원 목록을 불러오는 중입니다.</div>
             </div>
           </div>
 
@@ -364,6 +374,6 @@
       if (moduleGrid && module) moduleGrid.appendChild(module);
     });
   </script>
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

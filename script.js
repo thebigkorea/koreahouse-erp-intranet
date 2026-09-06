@@ -299,6 +299,8 @@ async function loadHealthCertBadge() {
 async function loadTodayAttendanceSummary() {
   const valueEl = document.getElementById('statusAttendance');
   const descEl = document.getElementById('statusAttendanceDesc');
+  const countEl = document.getElementById('attendanceRosterCount');
+  const listEl = document.getElementById('attendanceNameList');
 
   try {
     const response = await fetch(
@@ -322,9 +324,50 @@ async function loadTodayAttendanceSummary() {
       descEl.textContent =
         '근무 중 ' + workingCount + '명 · 퇴근 완료 ' + completedCount + '명';
     }
+
+    if (countEl) countEl.textContent = checkInCount + '명';
+
+    if (listEl) {
+      listEl.replaceChildren();
+      const employees = Array.isArray(data.employees) ? data.employees : [];
+
+      if (!employees.length) {
+        const empty = document.createElement('div');
+        empty.className = 'attendance-empty';
+        empty.textContent = '오늘 출근한 직원이 없습니다.';
+        listEl.appendChild(empty);
+      } else {
+        employees.forEach(function(employee) {
+          const row = document.createElement('div');
+          row.className = 'attendance-person';
+
+          const info = document.createElement('div');
+          info.className = 'attendance-person-info';
+
+          const name = document.createElement('strong');
+          name.textContent = String(employee.name || '-');
+
+          const time = document.createElement('small');
+          time.textContent = '출근 ' + String(employee.checkIn || '-');
+
+          const state = document.createElement('span');
+          const isCompleted = employee.status === '퇴근 완료';
+          state.className = 'attendance-state ' + (isCompleted ? 'completed' : 'working');
+          state.textContent = isCompleted ? '퇴근 완료' : '근무 중';
+
+          info.append(name, time);
+          row.append(info, state);
+          listEl.appendChild(row);
+        });
+      }
+    }
   } catch (error) {
     if (valueEl) valueEl.textContent = '-';
     if (descEl) descEl.textContent = '출퇴근 시스템 연결 확인 필요';
+    if (countEl) countEl.textContent = '-';
+    if (listEl) {
+      listEl.innerHTML = '<div class="attendance-empty">출근 직원 목록을 불러오지 못했습니다.</div>';
+    }
     console.log('오늘 출근 현황 조회 실패', error);
   }
 }
