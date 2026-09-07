@@ -197,7 +197,7 @@
             <div class="module-head"><span class="module-icon">🏠</span><div><h4>매장관리</h4><p>한국의집 운영 입력, 보건증 및 매장 원장</p></div></div>
             <div class="module-body">
               <div class="task-grid">
-                <a class="task primary" target="_blank" href="store-manager.html">매장 운영 입력</a>
+                <a class="task primary" target="_blank" href="https://thebigkorea.github.io/koreahouse-intranet/store-manager.html">매장 운영 입력</a>
                 <a class="task" target="_blank" href="https://docs.google.com/spreadsheets/d/1msk6vf_5zPXcUH9iimGW82BQzeiKXpDyxm2itsq7o1Q/edit?gid=370891861#gid=370891861">매장 원장 조회</a>
                 <a class="task" target="_blank" href="https://drive.worksmobile.com/drive/web/my?resourceKey=MTAwMDAxNTA0NzA1MTQyfDM0NzI2MDA4NDIzMTAyMjcyMDl8RHww&resourceLocation=24101">영업 관련 파일</a>
                 <a class="task" target="_blank" href="https://thebigkorea.github.io/koreahouse-intranet/health-cert.html">보건증 관리<span id="healthCertBadge" class="badge">0</span></a>
@@ -264,8 +264,8 @@
               <div class="task-grid">
                 <a class="task primary" target="_blank" href="https://thebigkorea.github.io/koreahouse-attendance/?v=3">출퇴근 등록</a>
                 <a class="task secure" href="#" onclick="openAttendanceAdmin();return false">출퇴근 관리자</a>
-                <a class="task secure" href="#" onclick="openOvertimePage('overtime.html');return false">초과근무 입력</a>
-                <a class="task secure" href="#" onclick="openOvertimePage('overtime-admin.html');return false">초과근무 조회</a>
+                <a class="task secure" href="#" onclick="openOvertimePage('https://thebigkorea.github.io/koreahouse-intranet/overtime.html');return false">초과근무 입력</a>
+                <a class="task secure" href="#" onclick="openOvertimePage('https://thebigkorea.github.io/koreahouse-intranet/overtime-admin.html');return false">초과근무 조회</a>
                 <a class="task" target="_blank" href="https://thebigkorea.github.io/koreahouse-leave/">연월차 관리</a>
               </div>
             </div>
@@ -375,5 +375,45 @@
     });
   </script>
   <script src="script.js?v=4"></script>
+  <script>
+    /* ===== 기존 한국의집 업무 포털 주소 기준 강제 보정 ===== */
+    function erpSecureOpen(message, url) {
+      if (typeof secureOpen === 'function') {
+        return secureOpen(message, url);
+      }
+      const pw = prompt(message);
+      if (pw === null) return;
+      if (pw !== '1234') {
+        alert('비밀번호가 올바르지 않습니다.');
+        return;
+      }
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function openOvertimePage(url) {
+      erpSecureOpen('초과근무 관리 비밀번호를 입력하세요.', url);
+    }
+    function openHrLedger() {
+      erpSecureOpen('인사관리대장 비밀번호를 입력하세요.', 'https://thebigkorea.github.io/hr-system/hr-list.html');
+    }
+    function openHrSheet() {
+      erpSecureOpen('인사 원장조회 비밀번호를 입력하세요.', 'https://docs.google.com/spreadsheets/d/1sSKno2C3Gnvx-FwfEru_rsP0QWzliWcVEQIKe9vXFqc/edit?gid=0#gid=0');
+    }
+    function openApplicantSheet() {
+      erpSecureOpen('지원자 원장조회 비밀번호를 입력하세요.', 'https://docs.google.com/spreadsheets/d/1WgLVb-hTehmz2huM5e-gyds1s8aX-7eBhMCYVZEyFDM/edit?gid=1278172800#gid=1278172800');
+    }
+    function openAttendanceAdmin() {
+      erpSecureOpen('출퇴근 관리자 조회 비밀번호를 입력하세요.', 'https://thebigkorea.github.io/koreahouse-attendance/admin.html');
+    }
+    function openAttendanceManage() {
+      erpSecureOpen('출퇴근 관리 비밀번호를 입력하세요.', 'https://thebigkorea.github.io/koreahouse-attendance/admin.html');
+    }
+    function openStaffList() {
+      erpSecureOpen('직원 목록 비밀번호를 입력하세요.', 'https://docs.google.com/spreadsheets/d/1y1f4noa90DCA_YxZYx9MXe_A523Z5g2raeLU4d4wwb4/edit?gid=422940514#gid=422940514');
+    }
+    function openContractLedger() {
+      erpSecureOpen('근로계약서 원장조회 비밀번호를 입력하세요.', 'https://docs.google.com/spreadsheets/d/1sSKno2C3Gnvx-FwfEru_rsP0QWzliWcVEQIKe9vXFqc/edit?gid=1591232369#gid=1591232369');
+    }
+  </script>
 </body>
 </html>
