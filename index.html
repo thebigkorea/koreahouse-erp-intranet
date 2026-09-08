@@ -125,13 +125,13 @@
             <div class="status-desc">30일 이내 계약</div>
           </div>
           <div class="status-card emphasis" role="button" tabindex="0"
-               onclick="openAttendanceManage()"
-               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAttendanceManage()}"
-               title="오늘 출퇴근 상세내역 보기"
+               onclick="openStatusDetail('https://thebigkorea.github.io/koreahouse-weekly-schedule/')"
+               onkeydown="openStatusDetailByKey(event,'https://thebigkorea.github.io/koreahouse-weekly-schedule/')"
+               title="오늘 주간 근무표 보기"
                style="cursor:pointer">
-            <div class="status-label">오늘 출근 현황</div>
+            <div class="status-label">오늘 출근 예정</div>
             <div class="status-value" id="statusAttendance">-</div>
-            <div class="status-desc" id="statusAttendanceDesc">출근 현황 불러오는 중</div>
+            <div class="status-desc" id="statusAttendanceDesc">주간 근무표 불러오는 중</div>
           </div>
         </div>
 
@@ -178,11 +178,11 @@
 
           <div class="panel attendance-roster-panel">
             <div class="panel-head">
-              <div><h3>오늘 출근 직원</h3><p>오늘 출근한 직원과 현재 상태입니다.</p></div>
+              <div><h3>오늘 출근 예정자</h3><p>주간 스케줄에 저장된 오늘 근무 예정자입니다.</p></div>
               <strong class="attendance-roster-count" id="attendanceRosterCount">-</strong>
             </div>
             <div class="attendance-name-list" id="attendanceNameList">
-              <div class="attendance-empty">출근 직원 목록을 불러오는 중입니다.</div>
+              <div class="attendance-empty">오늘 근무 예정자 목록을 불러오는 중입니다.</div>
             </div>
           </div>
 
@@ -374,7 +374,7 @@
       if (moduleGrid && module) moduleGrid.appendChild(module);
     });
   </script>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
   <script>
     /* ===== 기존 한국의집 업무 포털 주소 기준 강제 보정 ===== */
     function erpSecureOpen(message, url) {

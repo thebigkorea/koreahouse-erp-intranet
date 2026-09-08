@@ -90,8 +90,8 @@ const CONTRACT_API_URL =
 const HEALTH_CERT_API_URL =
   'https://script.google.com/macros/s/AKfycby-FdNL_GsXFB4klTrk8fM6YB7Fgkoh0-we-D48z9o34d0OUy09PtHuAaCIAfngIqs7/exec';
 
-const ATTENDANCE_API_URL =
-  'https://script.google.com/macros/s/AKfycbz6rYVTUixqPOhHhethQcRI4ziwNukl8EcZx9nVvFLw0rV5o4kLD_BExlONS7WPGE54sQ/exec';
+const WEEKLY_SCHEDULE_API_URL =
+  'https://script.google.com/macros/s/AKfycbyxNHxdt7xwXXp1OKib0PHHNc9qS1vXOlzaUCVsUJgqMmdpIcvVQsa2vY0hQgoSE-ab9Q/exec';
 
 function setStatusValue(id, count) {
   const el = document.getElementById(id);
@@ -296,45 +296,109 @@ async function loadHealthCertBadge() {
   }
 }
 
+function getMondayDateKey_(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + dd;
+}
+
 async function loadTodayAttendanceSummary() {
   const valueEl = document.getElementById('statusAttendance');
   const descEl = document.getElementById('statusAttendanceDesc');
   const countEl = document.getElementById('attendanceRosterCount');
   const listEl = document.getElementById('attendanceNameList');
 
+  const today = new Date();
+  const monday = getMondayDateKey_(today);
+  const dayIndex = (today.getDay() + 6) % 7; // 월=0 ... 일=6
+
+  const roleLabels = {
+    hall: '홀',
+    kitchen: '주방',
+    prep: '전처리',
+    exit: '퇴식',
+    wash: '설거지'
+  };
+
   try {
     const response = await fetch(
-      ATTENDANCE_API_URL +
-        '?action=getTodayAttendanceSummary&t=' +
+      WEEKLY_SCHEDULE_API_URL +
+        '?action=getWeeklyScheduleBundle&monday=' +
+        encodeURIComponent(monday) +
+        '&t=' +
         Date.now(),
       { cache: 'no-store' }
     );
 
     if (!response.ok) throw new Error('HTTP ' + response.status);
 
-    const data = await response.json();
-    if (!data.success) throw new Error(data.message || '출근 현황 조회 실패');
+    const result = await response.json();
+    if (!result.ok) throw new Error(result.message || '주간 근무표 조회 실패');
 
-    const checkInCount = Number(data.checkInCount || 0);
-    const workingCount = Number(data.workingCount || 0);
-    const completedCount = Number(data.completedCount || 0);
-
-    if (valueEl) valueEl.textContent = checkInCount + '명';
-    if (descEl) {
-      descEl.textContent =
-        '근무 중 ' + workingCount + '명 · 퇴근 완료 ' + completedCount + '명';
+    const saved = result.data && result.data.schedule ? result.data.schedule : {};
+    if (!saved.found) {
+      if (valueEl) valueEl.textContent = '0명';
+      if (descEl) descEl.textContent = '이번주 저장된 근무표 없음';
+      if (countEl) countEl.textContent = '0명';
+      if (listEl) {
+        listEl.innerHTML = '<div class="attendance-empty">이번주 저장된 근무표가 없습니다.</div>';
+      }
+      return;
     }
 
-    if (countEl) countEl.textContent = checkInCount + '명';
+    const schedule = saved.schedule || {};
+    const todaySchedule = schedule[String(dayIndex)] || schedule[dayIndex] || {};
+    const roles = ['hall', 'kitchen', 'prep', 'exit', 'wash'];
+    const employees = [];
+    const seenNames = new Set();
+    const roleCounts = {};
+
+    roles.forEach(function(role) {
+      const items = Array.isArray(todaySchedule[role]) ? todaySchedule[role] : [];
+      roleCounts[role] = 0;
+
+      items.forEach(function(item) {
+        const name = String((item && item.name) || '').trim();
+        if (!name || seenNames.has(name)) return;
+
+        seenNames.add(name);
+        roleCounts[role] += 1;
+        employees.push({
+          name: name,
+          time: String((item && item.time) || '').trim(),
+          role: role
+        });
+      });
+    });
+
+    const count = employees.length;
+    if (valueEl) valueEl.textContent = count + '명';
+    if (countEl) countEl.textContent = count + '명';
+
+    if (descEl) {
+      const parts = [];
+      if (roleCounts.hall) parts.push('홀 ' + roleCounts.hall + '명');
+      if (roleCounts.kitchen || roleCounts.prep) {
+        parts.push('주방 ' + ((roleCounts.kitchen || 0) + (roleCounts.prep || 0)) + '명');
+      }
+      if (roleCounts.exit) parts.push('퇴식 ' + roleCounts.exit + '명');
+      if (roleCounts.wash) parts.push('설거지 ' + roleCounts.wash + '명');
+      descEl.textContent = parts.length ? parts.join(' · ') : '주간 근무표 기준';
+    }
 
     if (listEl) {
       listEl.replaceChildren();
-      const employees = Array.isArray(data.employees) ? data.employees : [];
 
       if (!employees.length) {
         const empty = document.createElement('div');
         empty.className = 'attendance-empty';
-        empty.textContent = '오늘 출근한 직원이 없습니다.';
+        empty.textContent = '오늘 근무 예정자가 없습니다.';
         listEl.appendChild(empty);
       } else {
         employees.forEach(function(employee) {
@@ -345,15 +409,14 @@ async function loadTodayAttendanceSummary() {
           info.className = 'attendance-person-info';
 
           const name = document.createElement('strong');
-          name.textContent = String(employee.name || '-');
+          name.textContent = employee.name;
 
           const time = document.createElement('small');
-          time.textContent = '출근 ' + String(employee.checkIn || '-');
+          time.textContent = employee.time ? '예정 ' + employee.time : '근무시간 미입력';
 
           const state = document.createElement('span');
-          const isCompleted = employee.status === '퇴근 완료';
-          state.className = 'attendance-state ' + (isCompleted ? 'completed' : 'working');
-          state.textContent = isCompleted ? '퇴근 완료' : '근무 중';
+          state.className = 'attendance-state working';
+          state.textContent = roleLabels[employee.role] || '근무';
 
           info.append(name, time);
           row.append(info, state);
@@ -363,12 +426,12 @@ async function loadTodayAttendanceSummary() {
     }
   } catch (error) {
     if (valueEl) valueEl.textContent = '-';
-    if (descEl) descEl.textContent = '출퇴근 시스템 연결 확인 필요';
+    if (descEl) descEl.textContent = '주간 스케줄 연결 확인 필요';
     if (countEl) countEl.textContent = '-';
     if (listEl) {
-      listEl.innerHTML = '<div class="attendance-empty">출근 직원 목록을 불러오지 못했습니다.</div>';
+      listEl.innerHTML = '<div class="attendance-empty">오늘 근무 예정자 목록을 불러오지 못했습니다.</div>';
     }
-    console.log('오늘 출근 현황 조회 실패', error);
+    console.log('오늘 근무 예정자 조회 실패', error);
   }
 }
 
